@@ -34,16 +34,16 @@ export async function translateText(input: TranslateTextInput): Promise<Translat
 }
 
 const voiceMap: Record<(typeof allLanguageCodes)[number], string> = {
-    en: 'Azimech',
-    kn: 'Algenib',
-    hi: 'Achernar',
-    ta: 'Chara',
-    te: 'Deneb',
-    bn: 'Elnath',
-    gu: 'Fomalhaut',
-    mr: 'Gacrux',
-    ml: 'Hadar',
-    ur: 'Izar',
+    en: 'zubenelgenubi',
+    kn: 'algenib',
+    hi: 'achernar',
+    ta: 'sadachbia',
+    te: 'sadaltager',
+    bn: 'schedar',
+    gu: 'vindemiatrix',
+    mr: 'gacrux',
+    ml: 'rasalgethi',
+    ur: 'umbriel',
 };
 
 const translationPrompt = ai.definePrompt({
