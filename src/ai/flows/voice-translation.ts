@@ -35,12 +35,12 @@ export async function translateVoice(input: TranslateVoiceInput): Promise<Transl
   return translateVoiceFlow(input);
 }
 
-const translatePrompt = ai.definePrompt({
-  name: 'translatePrompt',
+const simpleTranslatePrompt = ai.definePrompt({
+  name: 'simpleTranslatePrompt',
   input: {
     schema: z.object({
-      sourceLanguage: z.enum(['en', 'kn', 'hi']),
-      targetLanguage: z.enum(['en', 'kn', 'hi']),
+      sourceLanguage: z.string().describe('The full name of the source language (e.g., English).'),
+      targetLanguage: z.string().describe('The full name of the target language (e.g., Kannada).'),
       text: z.string(),
     }),
   },
@@ -60,6 +60,7 @@ const translateVoiceFlow = ai.defineFlow(
         hi: 'Hindi'
     };
     const sourceLanguageName = languageMap[input.sourceLanguage];
+    const targetLanguageName = languageMap[input.targetLanguage];
     
     // 1. Transcribe audio to text (ASR)
     const {text: transcribedText} = await ai.generate({
@@ -76,9 +77,9 @@ const translateVoiceFlow = ai.defineFlow(
     }
 
     // 2. Translate text
-    const {text: translatedText} = await translatePrompt({
-      sourceLanguage: input.sourceLanguage,
-      targetLanguage: input.targetLanguage,
+    const {text: translatedText} = await simpleTranslatePrompt({
+      sourceLanguage: sourceLanguageName,
+      targetLanguage: targetLanguageName,
       text: transcribedText.trim(),
     });
 
