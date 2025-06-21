@@ -18,7 +18,7 @@ const TranslateVoiceInputSchema = z.object({
   audioDataUri: z
     .string()
     .describe(
-      'The audio data as a data URI that must include a MIME type and use Base64 encoding. Expected format: \'data:<mimetype>;base64,<encoded_data>\'.' // Corrected typo here
+      "The audio data as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
 });
 
@@ -54,24 +54,39 @@ const translateVoiceFlow = ai.defineFlow(
     outputSchema: TranslateVoiceOutputSchema,
   },
   async input => {
-    // 1. Convert audio to text
-    const audioBuffer = Buffer.from(
-      input.audioDataUri.substring(input.audioDataUri.indexOf(',') + 1),
-      'base64'
-    );
+    const languageMap = {
+        en: 'English',
+        kn: 'Kannada',
+        hi: 'Hindi'
+    };
+    const sourceLanguageName = languageMap[input.sourceLanguage];
+    
+    // 1. Transcribe audio to text (ASR)
+    const {text: transcribedText} = await ai.generate({
+      prompt: [
+        {
+          text: `You are an expert audio transcriber. Transcribe the following audio from a user. The user is speaking in ${sourceLanguageName}. Provide only the transcribed text as the output.`,
+        },
+        {media: {url: input.audioDataUri}},
+      ],
+    });
 
-    //TODO: Replace with real ASR
-    const text = 'dummy translation please ignore';
+    if (!transcribedText) {
+        throw new Error('Failed to transcribe audio. The transcription was empty.');
+    }
 
     // 2. Translate text
     const {text: translatedText} = await translatePrompt({
       sourceLanguage: input.sourceLanguage,
       targetLanguage: input.targetLanguage,
-      text,
+      text: transcribedText.trim(),
     });
 
-    // 3. Text to speech
+    if (!translatedText) {
+        throw new Error('Failed to translate text. The translation was empty.');
+    }
 
+    // 3. Text to speech
     const {media} = await ai.generate({
       model: 'googleai/gemini-2.5-flash-preview-tts',
       config: {
@@ -127,7 +142,3 @@ async function toWav(
     writer.end();
   });
 }
-
-
-
-
