@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * @fileOverview Voice translation flow for translating spoken phrases between Kannada, Hindi, and English.
+ * @fileOverview Voice translation flow for translating spoken phrases between supported languages.
  *
  * - translateVoice - A function that handles the voice translation process.
  * - TranslateVoiceInput - The input type for the translateVoice function.
@@ -12,9 +12,11 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import wav from 'wav';
 
+const allLanguageCodes = ['en', 'kn', 'hi', 'ta', 'te', 'bn', 'mr', 'gu', 'ml', 'ur'] as const;
+
 const TranslateVoiceInputSchema = z.object({
-  sourceLanguage: z.enum(['en', 'kn', 'hi']).describe('The language of the input audio.'),
-  targetLanguage: z.enum(['en', 'kn', 'hi']).describe('The language to translate the audio to.'),
+  sourceLanguage: z.enum(allLanguageCodes).describe('The language of the input audio.'),
+  targetLanguage: z.enum(allLanguageCodes).describe('The language to translate the audio to.'),
   audioDataUri: z
     .string()
     .describe(
@@ -35,6 +37,33 @@ export async function translateVoice(input: TranslateVoiceInput): Promise<Transl
   return translateVoiceFlow(input);
 }
 
+const languageMap: Record<(typeof allLanguageCodes)[number], string> = {
+    en: 'English',
+    kn: 'Kannada',
+    hi: 'Hindi',
+    ta: 'Tamil',
+    te: 'Telugu',
+    bn: 'Bengali',
+    mr: 'Marathi',
+    gu: 'Gujarati',
+    ml: 'Malayalam',
+    ur: 'Urdu'
+};
+
+const voiceMap: Record<(typeof allLanguageCodes)[number], string> = {
+    en: 'Azimech',
+    kn: 'Algenib',
+    hi: 'Achernar',
+    ta: 'Chara',
+    te: 'Deneb',
+    bn: 'Elnath',
+    gu: 'Fomalhaut',
+    mr: 'Gacrux',
+    ml: 'Hadar',
+    ur: 'Izar',
+};
+
+
 const simpleTranslatePrompt = ai.definePrompt({
   name: 'simpleTranslatePrompt',
   input: {
@@ -54,11 +83,6 @@ const translateVoiceFlow = ai.defineFlow(
     outputSchema: TranslateVoiceOutputSchema,
   },
   async input => {
-    const languageMap = {
-        en: 'English',
-        kn: 'Kannada',
-        hi: 'Hindi'
-    };
     const sourceLanguageName = languageMap[input.sourceLanguage];
     const targetLanguageName = languageMap[input.targetLanguage];
     
@@ -95,7 +119,7 @@ const translateVoiceFlow = ai.defineFlow(
         speechConfig: {
           voiceConfig: {
             prebuiltVoiceConfig: {
-              voiceName: input.targetLanguage === 'kn' ? 'Algenib' : input.targetLanguage === 'hi' ? 'Achernar' : 'Azimech',
+              voiceName: voiceMap[input.targetLanguage],
             },
           },
         },

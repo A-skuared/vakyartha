@@ -28,6 +28,19 @@ export function Phrasebook() {
 
   const { toast } = useToast();
 
+  const languageConfig: Record<Language, { name: string; }> = {
+    en: { name: "English" },
+    kn: { name: "Kannada" },
+    hi: { name: "Hindi" },
+    ta: { name: "Tamil" },
+    te: { name: "Telugu" },
+    bn: { name: "Bengali" },
+    mr: { name: "Marathi" },
+    gu: { name: "Gujarati" },
+    ml: { name: "Malayalam" },
+    ur: { name: "Urdu" },
+  };
+
   useEffect(() => {
     const fetchPhrases = async () => {
       setIsLoading(true);
@@ -60,12 +73,6 @@ export function Phrasebook() {
     toast({
       description: "Phrase copied to clipboard!",
     });
-  };
-  
-  const languageConfig: Record<Language, { name: string; }> = {
-    en: { name: "English" },
-    kn: { name: "Kannada" },
-    hi: { name: "Hindi" },
   };
 
   return (

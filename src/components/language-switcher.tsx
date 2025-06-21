@@ -4,15 +4,22 @@ import * as React from "react";
 import { ArrowRightLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { EnglishIcon, HindiIcon, KannadaIcon } from "@/components/language-icons";
+import { EnglishIcon, HindiIcon, KannadaIcon, TamilIcon, TeluguIcon, BengaliIcon, MarathiIcon, GujaratiIcon, MalayalamIcon, UrduIcon } from "@/components/language-icons";
 import { cn } from "@/lib/utils";
 
-export type Language = "en" | "kn" | "hi";
+export type Language = "en" | "kn" | "hi" | "ta" | "te" | "bn" | "mr" | "gu" | "ml" | "ur";
 
 const languageConfig: Record<Language, { name: string; Icon: React.FC<React.SVGProps<SVGSVGElement>> }> = {
   en: { name: "English", Icon: EnglishIcon },
   kn: { name: "Kannada", Icon: KannadaIcon },
   hi: { name: "Hindi", Icon: HindiIcon },
+  ta: { name: "Tamil", Icon: TamilIcon },
+  te: { name: "Telugu", Icon: TeluguIcon },
+  bn: { name: "Bengali", Icon: BengaliIcon },
+  mr: { name: "Marathi", Icon: MarathiIcon },
+  gu: { name: "Gujarati", Icon: GujaratiIcon },
+  ml: { name: "Malayalam", Icon: MalayalamIcon },
+  ur: { name: "Urdu", Icon: UrduIcon },
 };
 
 interface LanguageSwitcherProps {

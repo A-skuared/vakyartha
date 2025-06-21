@@ -55,6 +55,13 @@ export function TextTranslator() {
     en: { name: "English" },
     kn: { name: "Kannada" },
     hi: { name: "Hindi" },
+    ta: { name: "Tamil" },
+    te: { name: "Telugu" },
+    bn: { name: "Bengali" },
+    mr: { name: "Marathi" },
+    gu: { name: "Gujarati" },
+    ml: { name: "Malayalam" },
+    ur: { name: "Urdu" },
   };
 
   const handleTranslate = async () => {

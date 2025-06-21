@@ -10,11 +10,13 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import wav from 'wav';
 
+const allLanguageCodes = ['en', 'kn', 'hi', 'ta', 'te', 'bn', 'mr', 'gu', 'ml', 'ur'] as const;
+
 const TranslateTextInputSchema = z.object({
   sourceText: z.string().describe('The text to translate.'),
   sourceLanguage: z.string().describe('The source language name (e.g., English).'),
   targetLanguage: z.string().describe('The target language name (e.g., Kannada).'),
-  targetLanguageCode: z.enum(['en', 'kn', 'hi']).describe('The target language code.'),
+  targetLanguageCode: z.enum(allLanguageCodes).describe('The target language code.'),
 });
 
 export type TranslateTextInput = z.infer<typeof TranslateTextInputSchema>;
@@ -30,6 +32,19 @@ export type TranslateTextOutput = z.infer<typeof TranslateTextOutputSchema>;
 export async function translateText(input: TranslateTextInput): Promise<TranslateTextOutput> {
   return translateTextFlow(input);
 }
+
+const voiceMap: Record<(typeof allLanguageCodes)[number], string> = {
+    en: 'Azimech',
+    kn: 'Algenib',
+    hi: 'Achernar',
+    ta: 'Chara',
+    te: 'Deneb',
+    bn: 'Elnath',
+    gu: 'Fomalhaut',
+    mr: 'Gacrux',
+    ml: 'Hadar',
+    ur: 'Izar',
+};
 
 const translationPrompt = ai.definePrompt({
     name: 'translationPrompt',
@@ -74,7 +89,7 @@ const translateTextFlow = ai.defineFlow(
         speechConfig: {
           voiceConfig: {
             prebuiltVoiceConfig: {
-              voiceName: input.targetLanguageCode === 'kn' ? 'Algenib' : input.targetLanguageCode === 'hi' ? 'Achernar' : 'Azimech',
+              voiceName: voiceMap[input.targetLanguageCode],
             },
           },
         },
