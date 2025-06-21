@@ -97,7 +97,7 @@ const translateVoiceFlow = ai.defineFlow(
       ],
     });
 
-    if (!transcribedText) {
+    if (!transcribedText?.trim()) {
         throw new Error('Failed to transcribe audio. The transcription was empty.');
     }
 
@@ -108,7 +108,7 @@ const translateVoiceFlow = ai.defineFlow(
       text: transcribedText.trim(),
     });
 
-    if (!translatedText) {
+    if (!translatedText?.trim()) {
         throw new Error('Failed to translate text. The translation was empty.');
     }
 
@@ -125,7 +125,7 @@ const translateVoiceFlow = ai.defineFlow(
           },
         },
       },
-      prompt: translatedText,
+      prompt: translatedText.trim(),
     });
 
     if (!media) {

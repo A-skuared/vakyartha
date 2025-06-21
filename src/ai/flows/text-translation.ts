@@ -78,7 +78,7 @@ const translateTextFlow = ai.defineFlow(
         targetLanguage: input.targetLanguage,
     });
     
-    if (!output?.translatedText) {
+    if (!output?.translatedText?.trim()) {
         throw new Error('Failed to translate text. The translation was empty.');
     }
 
@@ -95,7 +95,7 @@ const translateTextFlow = ai.defineFlow(
           },
         },
       },
-      prompt: output.translatedText,
+      prompt: output.translatedText.trim(),
     });
 
     if (!media) {
